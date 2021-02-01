@@ -3,7 +3,7 @@ package com.sunny.android
 /** Sunny com.sunny.android
  * @Date: 2021/1/31 17:02
  * @Author: toPolaris
- * @Description: 提供一种全局获取Context的方式
+ * @Description: 提供一种全局获取Context的方式、提供令牌值调用常量
  */
 import android.annotation.SuppressLint
 import android.app.Application
@@ -13,7 +13,7 @@ class SunnyApplication : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        const val TOKEN = "HELLO_WORLD" // 令牌值
+        const val TOKEN = "ZtQWtVrLXYS31UMv" // 令牌值
     }
 
     override fun onCreate() {
