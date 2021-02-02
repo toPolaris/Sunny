@@ -14,11 +14,17 @@ import kotlin.coroutines.suspendCoroutine
  * @Description: 对所有的网络请求进行封装
  */
 object SunnyNetwork {
-    /** 使用ServiceCreator类创建PlaceService接口的动态代理对象 */
+    /** 使用ServiceCreator类创建PlaceService和WeatherService接口的动态代理对象 */
     private val placeService = ServiceCreator.create(PlaceService::class.java)
+    private val weatherService = ServiceCreator.create(WeatherService::class.java)
 
     /** 定义挂起函数，并调用PlaceService中的searchPlaces函数再调用await使Retrofit发起网络请求 */
     suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+    suspend fun getRealtimeWeather(lng: String, lat: String) =
+        weatherService.getRealtimeWeather(lng, lat).await()
+
+    suspend fun getDailyWeather(lng: String, lat: String) =
+        weatherService.getDailyWeather(lng, lat).await()
 
     /** 定义Call<T>的扩展函数await()来简化回调 */
     private suspend fun <T> Call<T>.await(): T {
@@ -31,7 +37,7 @@ object SunnyNetwork {
                     val body = response.body()
                     // 判断返回的对象是否为空
                     if (body != null) {
-                        //Log.d("SunnyNetwork", "not null")
+                        Log.d("SunnyNetwork", "body ${body.toString()}")
                         continuation.resume(body)
                     } // suspendCoroutine返回body
                     else {

@@ -1,5 +1,6 @@
 package com.sunny.android.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sunny.android.R
+import com.sunny.android.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
 /** Sunny com.sunny.android.ui.place
@@ -35,6 +37,18 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        /** 判断本地是否有记录 */
+        if (viewModel.isPlaceSaved()) {
+            val place = viewModel.getSavedPlace()
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         /** 给recyclerView设置LayoutManager */
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -45,7 +59,7 @@ class PlaceFragment : Fragment() {
 
             val content = editable.toString()
             if (content.isNotEmpty()) {
-                Log.d("PlaceFragment content", content)
+                //Log.d("PlaceFragment content", content)
                 viewModel.searchPlaces(content)
             } else {
                 recyclerView.visibility = View.GONE
